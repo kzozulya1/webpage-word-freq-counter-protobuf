@@ -1,7 +1,7 @@
 // frequency.proto
 syntax = "proto3";
 
-package frequency; 
+package protobuf; 
 
 service WordFrequencyService {
   rpc CreatePageWordFrequency(PageWordFrequency) returns (Response) {}
