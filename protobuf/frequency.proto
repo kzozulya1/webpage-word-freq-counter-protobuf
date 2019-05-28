@@ -5,6 +5,7 @@ package protobuf;
 
 service WordFrequencyService {
   rpc CreatePageWordFrequency(PageWordFrequency) returns (Response) {}
+  rpc GetPageWordFrequency(GetRequest) returns (Response) {}
 }
 
 message PageWordFrequency {
@@ -20,7 +21,13 @@ message Word {
   int32 count = 3;
 }
 
+// Created a blank get request
+message GetRequest{
+
+}
+
 message Response {
   bool created = 1;
   PageWordFrequency pageWordFreq = 2;
+  repeated PageWordFrequency pageWordFreqs = 3;
 }
