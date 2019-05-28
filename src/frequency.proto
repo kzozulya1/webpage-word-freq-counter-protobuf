@@ -1,0 +1,26 @@
+// frequency.proto
+syntax = "proto3";
+
+package frequency; 
+
+service WordFrequencyService {
+  rpc CreatePageWordFrequency(PageWordFrequency) returns (Response) {}
+}
+
+message PageWordFrequency {
+  string id = 1;
+  string page_url = 2;
+  string page_title = 3;
+  repeated Word words = 4;
+}
+
+message Word {
+  string id = 1;
+  string value = 2;
+  int32 count = 3;
+}
+
+message Response {
+  bool created = 1;
+  PageWordFrequency consignment = 2;
+}
