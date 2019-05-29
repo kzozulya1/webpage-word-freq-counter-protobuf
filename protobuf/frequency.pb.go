@@ -142,42 +142,74 @@ func (m *Word) GetCount() int32 {
 	return 0
 }
 
-// Created a blank get request
-type GetRequest struct {
+// Request filter: no params mean fetch all records, page_url + word apply filter on all records
+type GetRequestFilter struct {
+	Id                   string   `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	PageUrl              string   `protobuf:"bytes,2,opt,name=page_url,json=pageUrl,proto3" json:"page_url,omitempty"`
+	Word                 string   `protobuf:"bytes,3,opt,name=word,proto3" json:"word,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *GetRequest) Reset()         { *m = GetRequest{} }
-func (m *GetRequest) String() string { return proto.CompactTextString(m) }
-func (*GetRequest) ProtoMessage()    {}
-func (*GetRequest) Descriptor() ([]byte, []int) {
+func (m *GetRequestFilter) Reset()         { *m = GetRequestFilter{} }
+func (m *GetRequestFilter) String() string { return proto.CompactTextString(m) }
+func (*GetRequestFilter) ProtoMessage()    {}
+func (*GetRequestFilter) Descriptor() ([]byte, []int) {
 	return fileDescriptor_717812b2e414acee, []int{2}
 }
 
-func (m *GetRequest) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_GetRequest.Unmarshal(m, b)
+func (m *GetRequestFilter) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetRequestFilter.Unmarshal(m, b)
 }
-func (m *GetRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_GetRequest.Marshal(b, m, deterministic)
+func (m *GetRequestFilter) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetRequestFilter.Marshal(b, m, deterministic)
 }
-func (m *GetRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_GetRequest.Merge(m, src)
+func (m *GetRequestFilter) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetRequestFilter.Merge(m, src)
 }
-func (m *GetRequest) XXX_Size() int {
-	return xxx_messageInfo_GetRequest.Size(m)
+func (m *GetRequestFilter) XXX_Size() int {
+	return xxx_messageInfo_GetRequestFilter.Size(m)
 }
-func (m *GetRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_GetRequest.DiscardUnknown(m)
+func (m *GetRequestFilter) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetRequestFilter.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_GetRequest proto.InternalMessageInfo
+var xxx_messageInfo_GetRequestFilter proto.InternalMessageInfo
 
+func (m *GetRequestFilter) GetId() string {
+	if m != nil {
+		return m.Id
+	}
+	return ""
+}
+
+func (m *GetRequestFilter) GetPageUrl() string {
+	if m != nil {
+		return m.PageUrl
+	}
+	return ""
+}
+
+func (m *GetRequestFilter) GetWord() string {
+	if m != nil {
+		return m.Word
+	}
+	return ""
+}
+
+//Common response object
 type Response struct {
-	Created              bool                 `protobuf:"varint,1,opt,name=created,proto3" json:"created,omitempty"`
-	PageWordFreq         *PageWordFrequency   `protobuf:"bytes,2,opt,name=pageWordFreq,proto3" json:"pageWordFreq,omitempty"`
-	PageWordFreqs        []*PageWordFrequency `protobuf:"bytes,3,rep,name=pageWordFreqs,proto3" json:"pageWordFreqs,omitempty"`
+	//True if record was created
+	Created bool `protobuf:"varint,1,opt,name=created,proto3" json:"created,omitempty"`
+	//True if record was updated
+	Updated bool `protobuf:"varint,2,opt,name=updated,proto3" json:"updated,omitempty"`
+	//True if record was removed
+	Removed bool `protobuf:"varint,3,opt,name=removed,proto3" json:"removed,omitempty"`
+	//Used when create / update records
+	PageWordFreq *PageWordFrequency `protobuf:"bytes,4,opt,name=pageWordFreq,proto3" json:"pageWordFreq,omitempty"`
+	//Array, used when response with GetPageWordFrequency
+	PageWordFreqs        []*PageWordFrequency `protobuf:"bytes,5,rep,name=pageWordFreqs,proto3" json:"pageWordFreqs,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}             `json:"-"`
 	XXX_unrecognized     []byte               `json:"-"`
 	XXX_sizecache        int32                `json:"-"`
@@ -215,6 +247,20 @@ func (m *Response) GetCreated() bool {
 	return false
 }
 
+func (m *Response) GetUpdated() bool {
+	if m != nil {
+		return m.Updated
+	}
+	return false
+}
+
+func (m *Response) GetRemoved() bool {
+	if m != nil {
+		return m.Removed
+	}
+	return false
+}
+
 func (m *Response) GetPageWordFreq() *PageWordFrequency {
 	if m != nil {
 		return m.PageWordFreq
@@ -232,33 +278,37 @@ func (m *Response) GetPageWordFreqs() []*PageWordFrequency {
 func init() {
 	proto.RegisterType((*PageWordFrequency)(nil), "protobuf.PageWordFrequency")
 	proto.RegisterType((*Word)(nil), "protobuf.Word")
-	proto.RegisterType((*GetRequest)(nil), "protobuf.GetRequest")
+	proto.RegisterType((*GetRequestFilter)(nil), "protobuf.GetRequestFilter")
 	proto.RegisterType((*Response)(nil), "protobuf.Response")
 }
 
 func init() { proto.RegisterFile("frequency.proto", fileDescriptor_717812b2e414acee) }
 
 var fileDescriptor_717812b2e414acee = []byte{
-	// 304 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x7c, 0x51, 0xc1, 0x4a, 0xc3, 0x40,
-	0x10, 0x35, 0x6d, 0x63, 0xd3, 0x69, 0xad, 0x38, 0x04, 0x5c, 0x15, 0xa1, 0x04, 0x0f, 0x3d, 0xe5,
-	0x10, 0x3f, 0x40, 0xac, 0x60, 0x2f, 0x1e, 0x64, 0x55, 0x3c, 0x4a, 0x9a, 0x4c, 0x4b, 0x20, 0x64,
-	0xe3, 0x66, 0x53, 0xf1, 0xec, 0xcf, 0xf4, 0x33, 0x65, 0x37, 0x86, 0x34, 0x44, 0x7a, 0x5a, 0xde,
-	0x7b, 0x33, 0xef, 0xcd, 0xcc, 0xc2, 0xe9, 0x5a, 0xd2, 0x67, 0x49, 0x59, 0xf4, 0xed, 0xe7, 0x52,
-	0x28, 0x81, 0x8e, 0x79, 0x56, 0xe5, 0xda, 0xfb, 0xb1, 0xe0, 0xec, 0x39, 0xdc, 0xd0, 0xbb, 0x90,
-	0xf1, 0x63, 0x5d, 0x85, 0x53, 0xe8, 0x25, 0x31, 0xb3, 0x66, 0xd6, 0x7c, 0xc4, 0x7b, 0x49, 0x8c,
-	0x17, 0xe0, 0xe4, 0xe1, 0x86, 0x3e, 0x4a, 0x99, 0xb2, 0x9e, 0x61, 0x87, 0x1a, 0xbf, 0xc9, 0x14,
-	0xaf, 0x01, 0x8c, 0xa4, 0x12, 0x95, 0x12, 0xeb, 0x1b, 0x71, 0xa4, 0x99, 0x57, 0x4d, 0xe0, 0x0d,
-	0xd8, 0x5f, 0x42, 0xc6, 0x05, 0x1b, 0xcc, 0xfa, 0xf3, 0x71, 0x30, 0xf5, 0xeb, 0x64, 0x5f, 0x27,
-	0xf2, 0x4a, 0xf4, 0x16, 0x30, 0xd0, 0xb0, 0x93, 0xeb, 0x82, 0xbd, 0x0d, 0xd3, 0x92, 0xfe, 0x42,
-	0x2b, 0xa0, 0xd9, 0x48, 0x94, 0x99, 0x32, 0x69, 0x36, 0xaf, 0x80, 0x37, 0x01, 0x58, 0x92, 0xe2,
-	0x7a, 0x85, 0x42, 0x79, 0x3b, 0x0b, 0x1c, 0x4e, 0x45, 0x2e, 0xb2, 0x82, 0x90, 0xc1, 0x30, 0x92,
-	0x14, 0x2a, 0xaa, 0xbc, 0x1d, 0x5e, 0x43, 0xbc, 0x83, 0x49, 0xbe, 0xb7, 0xbd, 0xc9, 0x19, 0x07,
-	0x57, 0xcd, 0x94, 0x9d, 0xdb, 0xf0, 0x56, 0x03, 0xde, 0xc3, 0xc9, 0x3e, 0x2e, 0x58, 0xdf, 0xec,
-	0x79, 0xd0, 0xa1, 0xdd, 0x11, 0xec, 0x2c, 0x70, 0x5b, 0x05, 0x2f, 0x24, 0xb7, 0x49, 0x44, 0xf8,
-	0x04, 0xe7, 0x0f, 0x66, 0xce, 0xee, 0x07, 0x1d, 0xf2, 0xbf, 0xc4, 0x46, 0xac, 0x4f, 0xe0, 0x1d,
-	0xe1, 0x02, 0xdc, 0x25, 0xa9, 0xae, 0x95, 0xdb, 0x54, 0x37, 0xf7, 0xfb, 0xdf, 0x63, 0x75, 0x6c,
-	0xc8, 0xdb, 0xdf, 0x00, 0x00, 0x00, 0xff, 0xff, 0xad, 0x8f, 0x16, 0x21, 0x51, 0x02, 0x00, 0x00,
+	// 357 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x52, 0xc1, 0x4e, 0xc2, 0x40,
+	0x14, 0xb4, 0xa5, 0x95, 0xf2, 0x50, 0xd4, 0x0d, 0x89, 0x2b, 0xc6, 0x48, 0x1a, 0x0f, 0x9c, 0x38,
+	0xe0, 0x07, 0x18, 0x35, 0x01, 0x13, 0x0f, 0xea, 0x0a, 0xf1, 0x68, 0x4a, 0xfb, 0x20, 0x4d, 0x2a,
+	0x5b, 0xb7, 0x5b, 0x8c, 0x67, 0x7e, 0xd3, 0x8f, 0x31, 0xbb, 0x4b, 0x03, 0xd8, 0x48, 0x62, 0xe2,
+	0xa9, 0x9d, 0x99, 0x7d, 0x33, 0x9d, 0xb7, 0x85, 0x83, 0x89, 0xc0, 0xf7, 0x1c, 0x67, 0xe1, 0x67,
+	0x37, 0x15, 0x5c, 0x72, 0xe2, 0xe9, 0xc7, 0x38, 0x9f, 0xf8, 0x0b, 0x0b, 0x8e, 0x1e, 0x83, 0x29,
+	0xbe, 0x70, 0x11, 0xf5, 0x8b, 0x53, 0xa4, 0x01, 0x76, 0x1c, 0x51, 0xab, 0x6d, 0x75, 0x6a, 0xcc,
+	0x8e, 0x23, 0x72, 0x02, 0x5e, 0x1a, 0x4c, 0xf1, 0x35, 0x17, 0x09, 0xb5, 0x35, 0x5b, 0x55, 0x78,
+	0x24, 0x12, 0x72, 0x06, 0xa0, 0x25, 0x19, 0xcb, 0x04, 0x69, 0x45, 0x8b, 0x35, 0xc5, 0x0c, 0x15,
+	0x41, 0x2e, 0xc0, 0xfd, 0xe0, 0x22, 0xca, 0xa8, 0xd3, 0xae, 0x74, 0xea, 0xbd, 0x46, 0xb7, 0x48,
+	0xee, 0xaa, 0x44, 0x66, 0x44, 0xff, 0x06, 0x1c, 0x05, 0x4b, 0xb9, 0x4d, 0x70, 0xe7, 0x41, 0x92,
+	0xe3, 0x32, 0xd4, 0x00, 0xc5, 0x86, 0x3c, 0x9f, 0x49, 0x9d, 0xe6, 0x32, 0x03, 0xfc, 0x27, 0x38,
+	0x1c, 0xa0, 0x64, 0xaa, 0x42, 0x26, 0xfb, 0x71, 0x22, 0x51, 0xfc, 0xa5, 0x07, 0x01, 0x47, 0x7d,
+	0xcb, 0xb2, 0x81, 0x7e, 0xf7, 0xbf, 0x2c, 0xf0, 0x18, 0x66, 0x29, 0x9f, 0x65, 0x48, 0x28, 0x54,
+	0x43, 0x81, 0x81, 0x44, 0x63, 0xe8, 0xb1, 0x02, 0x2a, 0x25, 0x4f, 0x23, 0xad, 0xd8, 0x46, 0x59,
+	0x42, 0xa5, 0x08, 0x7c, 0xe3, 0x73, 0x34, 0xbe, 0x1e, 0x2b, 0x20, 0xb9, 0x82, 0xbd, 0x74, 0x6d,
+	0xed, 0xd4, 0x69, 0x5b, 0x9d, 0x7a, 0xef, 0x74, 0xb5, 0x9e, 0xd2, 0xa5, 0xb0, 0x8d, 0x01, 0x72,
+	0x0d, 0xfb, 0xeb, 0x38, 0xa3, 0xae, 0x5e, 0xf0, 0x56, 0x87, 0xcd, 0x89, 0xde, 0xc2, 0x86, 0xe6,
+	0xc6, 0x81, 0x67, 0x14, 0xf3, 0x38, 0x44, 0x32, 0x84, 0xf3, 0x91, 0x6e, 0xf0, 0x20, 0x6e, 0x75,
+	0xc7, 0xf2, 0x1f, 0xb2, 0x2d, 0xa7, 0x45, 0x56, 0x62, 0xb1, 0x3e, 0x7f, 0x87, 0xdc, 0xc3, 0x31,
+	0xd3, 0xed, 0xcb, 0x6e, 0xad, 0xd5, 0xc0, 0xcf, 0x3b, 0xfc, 0xc5, 0xec, 0x0e, 0x9a, 0x03, 0x94,
+	0xff, 0xe0, 0x34, 0xde, 0xd5, 0xe4, 0xe5, 0x77, 0x00, 0x00, 0x00, 0xff, 0xff, 0x52, 0x75, 0xe7,
+	0xe3, 0x25, 0x03, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -273,8 +323,12 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type WordFrequencyServiceClient interface {
-	CreatePageWordFrequency(ctx context.Context, in *PageWordFrequency, opts ...grpc.CallOption) (*Response, error)
-	GetPageWordFrequency(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*Response, error)
+	//Create or Update record
+	UpdateOrCreatePageWordFrequency(ctx context.Context, in *PageWordFrequency, opts ...grpc.CallOption) (*Response, error)
+	//Remove record by GetRequestFilter.page_url
+	RemovePageWordFrequency(ctx context.Context, in *GetRequestFilter, opts ...grpc.CallOption) (*Response, error)
+	//Get all records, or with applied filters GetRequestFilter.page_url / GetRequestFilter.word
+	GetPageWordFrequency(ctx context.Context, in *GetRequestFilter, opts ...grpc.CallOption) (*Response, error)
 }
 
 type wordFrequencyServiceClient struct {
@@ -285,16 +339,25 @@ func NewWordFrequencyServiceClient(cc *grpc.ClientConn) WordFrequencyServiceClie
 	return &wordFrequencyServiceClient{cc}
 }
 
-func (c *wordFrequencyServiceClient) CreatePageWordFrequency(ctx context.Context, in *PageWordFrequency, opts ...grpc.CallOption) (*Response, error) {
+func (c *wordFrequencyServiceClient) UpdateOrCreatePageWordFrequency(ctx context.Context, in *PageWordFrequency, opts ...grpc.CallOption) (*Response, error) {
 	out := new(Response)
-	err := c.cc.Invoke(ctx, "/protobuf.WordFrequencyService/CreatePageWordFrequency", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/protobuf.WordFrequencyService/UpdateOrCreatePageWordFrequency", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *wordFrequencyServiceClient) GetPageWordFrequency(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*Response, error) {
+func (c *wordFrequencyServiceClient) RemovePageWordFrequency(ctx context.Context, in *GetRequestFilter, opts ...grpc.CallOption) (*Response, error) {
+	out := new(Response)
+	err := c.cc.Invoke(ctx, "/protobuf.WordFrequencyService/RemovePageWordFrequency", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *wordFrequencyServiceClient) GetPageWordFrequency(ctx context.Context, in *GetRequestFilter, opts ...grpc.CallOption) (*Response, error) {
 	out := new(Response)
 	err := c.cc.Invoke(ctx, "/protobuf.WordFrequencyService/GetPageWordFrequency", in, out, opts...)
 	if err != nil {
@@ -305,18 +368,25 @@ func (c *wordFrequencyServiceClient) GetPageWordFrequency(ctx context.Context, i
 
 // WordFrequencyServiceServer is the server API for WordFrequencyService service.
 type WordFrequencyServiceServer interface {
-	CreatePageWordFrequency(context.Context, *PageWordFrequency) (*Response, error)
-	GetPageWordFrequency(context.Context, *GetRequest) (*Response, error)
+	//Create or Update record
+	UpdateOrCreatePageWordFrequency(context.Context, *PageWordFrequency) (*Response, error)
+	//Remove record by GetRequestFilter.page_url
+	RemovePageWordFrequency(context.Context, *GetRequestFilter) (*Response, error)
+	//Get all records, or with applied filters GetRequestFilter.page_url / GetRequestFilter.word
+	GetPageWordFrequency(context.Context, *GetRequestFilter) (*Response, error)
 }
 
 // UnimplementedWordFrequencyServiceServer can be embedded to have forward compatible implementations.
 type UnimplementedWordFrequencyServiceServer struct {
 }
 
-func (*UnimplementedWordFrequencyServiceServer) CreatePageWordFrequency(ctx context.Context, req *PageWordFrequency) (*Response, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreatePageWordFrequency not implemented")
+func (*UnimplementedWordFrequencyServiceServer) UpdateOrCreatePageWordFrequency(ctx context.Context, req *PageWordFrequency) (*Response, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateOrCreatePageWordFrequency not implemented")
 }
-func (*UnimplementedWordFrequencyServiceServer) GetPageWordFrequency(ctx context.Context, req *GetRequest) (*Response, error) {
+func (*UnimplementedWordFrequencyServiceServer) RemovePageWordFrequency(ctx context.Context, req *GetRequestFilter) (*Response, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemovePageWordFrequency not implemented")
+}
+func (*UnimplementedWordFrequencyServiceServer) GetPageWordFrequency(ctx context.Context, req *GetRequestFilter) (*Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetPageWordFrequency not implemented")
 }
 
@@ -324,26 +394,44 @@ func RegisterWordFrequencyServiceServer(s *grpc.Server, srv WordFrequencyService
 	s.RegisterService(&_WordFrequencyService_serviceDesc, srv)
 }
 
-func _WordFrequencyService_CreatePageWordFrequency_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _WordFrequencyService_UpdateOrCreatePageWordFrequency_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(PageWordFrequency)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(WordFrequencyServiceServer).CreatePageWordFrequency(ctx, in)
+		return srv.(WordFrequencyServiceServer).UpdateOrCreatePageWordFrequency(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/protobuf.WordFrequencyService/CreatePageWordFrequency",
+		FullMethod: "/protobuf.WordFrequencyService/UpdateOrCreatePageWordFrequency",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(WordFrequencyServiceServer).CreatePageWordFrequency(ctx, req.(*PageWordFrequency))
+		return srv.(WordFrequencyServiceServer).UpdateOrCreatePageWordFrequency(ctx, req.(*PageWordFrequency))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _WordFrequencyService_RemovePageWordFrequency_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetRequestFilter)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WordFrequencyServiceServer).RemovePageWordFrequency(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/protobuf.WordFrequencyService/RemovePageWordFrequency",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WordFrequencyServiceServer).RemovePageWordFrequency(ctx, req.(*GetRequestFilter))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _WordFrequencyService_GetPageWordFrequency_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetRequest)
+	in := new(GetRequestFilter)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -355,7 +443,7 @@ func _WordFrequencyService_GetPageWordFrequency_Handler(srv interface{}, ctx con
 		FullMethod: "/protobuf.WordFrequencyService/GetPageWordFrequency",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(WordFrequencyServiceServer).GetPageWordFrequency(ctx, req.(*GetRequest))
+		return srv.(WordFrequencyServiceServer).GetPageWordFrequency(ctx, req.(*GetRequestFilter))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -365,8 +453,12 @@ var _WordFrequencyService_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*WordFrequencyServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "CreatePageWordFrequency",
-			Handler:    _WordFrequencyService_CreatePageWordFrequency_Handler,
+			MethodName: "UpdateOrCreatePageWordFrequency",
+			Handler:    _WordFrequencyService_UpdateOrCreatePageWordFrequency_Handler,
+		},
+		{
+			MethodName: "RemovePageWordFrequency",
+			Handler:    _WordFrequencyService_RemovePageWordFrequency_Handler,
 		},
 		{
 			MethodName: "GetPageWordFrequency",

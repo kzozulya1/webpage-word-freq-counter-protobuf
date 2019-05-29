@@ -4,8 +4,14 @@ syntax = "proto3";
 package protobuf; 
 
 service WordFrequencyService {
-  rpc CreatePageWordFrequency(PageWordFrequency) returns (Response) {}
-  rpc GetPageWordFrequency(GetRequest) returns (Response) {}
+  //Create or Update record
+  rpc UpdateOrCreatePageWordFrequency(PageWordFrequency) returns (Response) {}
+  
+  //Remove record by GetRequestFilter.page_url
+  rpc RemovePageWordFrequency(GetRequestFilter) returns (Response) {}
+  
+  //Get all records, or with applied filters GetRequestFilter.page_url / GetRequestFilter.word
+  rpc GetPageWordFrequency(GetRequestFilter) returns (Response) {}
 }
 
 message PageWordFrequency {
@@ -21,13 +27,23 @@ message Word {
   int32 count = 3;
 }
 
-// Created a blank get request
-message GetRequest{
-
+// Request filter: no params mean fetch all records, page_url + word apply filter on all records
+message GetRequestFilter{
+  string id = 1;
+  string page_url = 2;
+  string word = 3;
 }
 
+//Common response object
 message Response {
+  //True if record was created
   bool created = 1;
-  PageWordFrequency pageWordFreq = 2;
-  repeated PageWordFrequency pageWordFreqs = 3;
+  //True if record was updated
+  bool updated = 2;
+  //True if record was removed
+  bool removed = 3;
+  //Used when create / update records
+  PageWordFrequency pageWordFreq = 4;
+  //Array, used when response with GetPageWordFrequency
+  repeated PageWordFrequency pageWordFreqs = 5;
 }
